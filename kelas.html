@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Kilat - Member Area Premium</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-900 to-brand-600 px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+            <div class="absolute -top-16 -right-16 w-32 h-32 bg-brand-100 rounded-full opacity-50"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="inline-block bg-brand-100 p-4 rounded-full mb-4">
+                    <i class="fa-solid fa-graduation-cap text-4xl text-brand-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Login Member Kilat</h2>
+                <p class="text-sm text-gray-500 mt-2 leading-relaxed">Terimakasih sudah membeli akses kelas lynk.id ini<br>masukkan hak akses pembelian anda disini.</p>
+            </div>
+
+            <form id="login-form" class="space-y-5 relative z-10">
+                <div id="error-msg" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-3 text-sm rounded shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Username atau Password salah!
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" id="username" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Masukkan username" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="••••••••" required>
+                        <!-- Tombol Mata untuk Tampilkan Password -->
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-brand-600 transition">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-lg shadow-md transition duration-300 transform hover:-translate-y-0.5">
+                    Mulai Belajar <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ==================== DASHBOARD SCREEN ==================== -->
+    <div id="dashboard-screen" class="hidden flex-col min-h-screen w-full">
+        
+        <!-- Navbar -->
+        <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-bolt text-yellow-500 text-2xl mr-2"></i>
+                        <span class="font-bold text-xl text-gray-800 tracking-tight">Kelas<span class="text-brand-600">Linkkilat</span></span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-medium text-gray-600 hidden md:block">Halo, Member!</span>
+                        <button onclick="logout()" class="text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-md text-sm font-medium transition">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Keluar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full fade-in">
+            
+            <!-- Hero Section -->
+            <div class="bg-brand-900 rounded-2xl p-8 mb-8 text-white shadow-xl">
+                <h1 class="text-3xl md:text-4xl font-bold mb-3">Assalamualaikum Warahmatullahi Wabarakatuh 👋</h1>
+                <p class="text-lg text-brand-100 max-w-3xl leading-relaxed">
+                    Terimakasih sudah join di <strong>Kelas Buat Landingpage lewat Lynk.id Gratis</strong>. Selamat bergabung ya temen-temen, semoga bermanfaat.
+                </p>
+            </div>
+
+            <!-- Rules & Disclaimer -->
+            <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-10 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div class="bg-red-100 p-3 rounded-full text-red-600 shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-red-800 mb-1">NOTED / PERATURAN AKSES</h3>
+                    <p class="text-red-700 text-sm md:text-base leading-relaxed">
+                        Akses Kelas ini, Tools, Tutorial, dll. <strong>Semuanya penggunaan hanya untuk pribadi ya</strong>, tidak halal/tidak berkah jika disebarluaskan / dijual kembali secara bebas. <br>
+                        Jika ingin menjual kelas dan akses ini bisa join affiliate ya, silakan hubungi WhatsApp: <strong class="bg-red-200 px-2 py-0.5 rounded">085755643820 (agustriian)</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- KOLOM KIRI: MATERI UTAMA & BONUS VIDEO AI -->
+                <div class="lg:col-span-2 space-y-10">
+                    
+                    <!-- KELAS UTAMA LYNK.ID -->
+                    <section>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-brand-100 p-2 rounded-lg text-brand-600 mr-3"><i class="fa-solid fa-book-open"></i></div>
+                            <h2 class="text-2xl font-bold text-gray-800">Modul Kelas Lynk.id</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- Video 1 -->
+                            <a href="https://www.youtube.com/live/F3sg6kJ5uPc?si=40tU0UCvfMrVDQt7" target="_blank" class="group flex flex-col sm:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden transition-all duration-300">
+                                <div class="w-full sm:w-44 h-28 bg-gray-100 relative shrink-0">
+                                    <img src="https://img.youtube.com/vi/F3sg6kJ5uPc/hqdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"><i class="fa-brands fa-youtube text-3xl text-red-600"></i></div>
+                                </div>
+                                <div class="p-4 flex-grow">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-brand-600 transition">Video Tutorial Lynk.id dari 0</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Panduan langkah demi langkah mulai dari proses pembuatan akun baru.</p>
+                                </div>
+                            </a>
+
+                            <!-- Video 2 -->
+                            <a href="https://youtube.com/live/Y7c-gbf1u4k?feature=share" target="_blank" class="group flex flex-col sm:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden transition-all duration-300">
+                                <div class="w-full sm:w-44 h-28 bg-gray-100 relative shrink-0">
+                                    <img src="https://img.youtube.com/vi/Y7c-gbf1u4k/hqdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"><i class="fa-brands fa-youtube text-3xl text-red-600"></i></div>
+                                </div>
+                                <div class="p-4 flex-grow">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-brand-600 transition">Video Tutorial Buat Landingpage</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Cara menyusun komponen halaman penawaran yang rapi dan memikat.</p>
+                                </div>
+                            </a>
+
+                            <!-- Video 3 -->
+                            <a href="https://youtube.com/live/aDN2CefV2y4?feature=share" target="_blank" class="group flex flex-col sm:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden transition-all duration-300">
+                                <div class="w-full sm:w-44 h-28 bg-gray-100 relative shrink-0">
+                                    <img src="https://img.youtube.com/vi/aDN2CefV2y4/hqdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"><i class="fa-brands fa-youtube text-3xl text-red-600"></i></div>
+                                </div>
+                                <div class="p-4 flex-grow">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-brand-600 transition">Video Tutorial Menambahkan Page / Halaman Kedua</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Membahas pembuatan multi-page & proses lama Creating Text Code.</p>
+                                </div>
+                            </a>
+
+                            <!-- Video 4 -->
+                            <a href="https://youtube.com/live/d6LpfnS0Img?feature=share" target="_blank" class="group flex flex-col sm:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden transition-all duration-300">
+                                <div class="w-full sm:w-44 h-28 bg-gray-100 relative shrink-0">
+                                    <img src="https://img.youtube.com/vi/d6LpfnS0Img/hqdefault.jpg" alt="Thumbnail" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"><i class="fa-brands fa-youtube text-3xl text-red-600"></i></div>
+                                </div>
+                                <div class="p-4 flex-grow">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-brand-600 transition">Video Tutorial Jual Produk Fisik di Lynk.id</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Sistem integrasi toko untuk produk fisik, pengiriman, dan transaksi.</p>
+                                </div>
+                            </a>
+
+                            <!-- Zoom Live Record -->
+                            <a href="https://www.youtube.com/live/j5dtoLn0WCg" target="_blank" class="group flex items-center bg-blue-50 rounded-xl shadow-sm hover:bg-blue-100 border border-blue-200 p-4 transition-all duration-300">
+                                <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center shrink-0 mr-4 shadow">
+                                    <i class="fa-solid fa-video text-sm"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-blue-700 transition">RECORD PENDAMPINGAN ZOOM (18 APRIL 2026)</h4>
+                                    <p class="text-xs text-gray-600">Sesi rekam ulang bimbingan intensif dan bedah langsung kasus member.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- BONUS KELAS: TUTORIAL VIDEO AI -->
+                    <section>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-purple-100 p-2 rounded-lg text-purple-600 mr-3"><i class="fa-solid fa-clapperboard"></i></div>
+                            <h2 class="text-2xl font-bold text-gray-800">Bonus Kelas: Tutorial Video AI</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <a href="https://labs.google/fx/tools/flow" target="_blank" class="bg-white p-5 rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition group flex items-start gap-3">
+                                <div class="text-purple-500 text-xl"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition">Link FLOW (Google Labs)</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Platform eksperimen AI resmi dari Google Labs.</p>
+                                </div>
+                            </a>
+                            <a href="https://youtu.be/WwyapjyWQSQ" target="_blank" class="bg-white p-5 rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition group flex items-start gap-3">
+                                <div class="text-red-500 text-xl"><i class="fa-brands fa-youtube"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition">Gerakin Gambar ke Video</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Rekaman trik menghidupkan foto diam menjadi video.</p>
+                                </div>
+                            </a>
+                            <a href="https://youtu.be/c69ts2VCm_E" target="_blank" class="bg-white p-5 rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition group flex items-start gap-3">
+                                <div class="text-red-500 text-xl"><i class="fa-brands fa-youtube"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition">Buat Video Storyboard</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Cara merancang alur adegan video terkonsep AI.</p>
+                                </div>
+                            </a>
+                            <a href="https://youtube.com/live/ftFRpOgNcwQ?feature=share" target="_blank" class="bg-white p-5 rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition group flex items-start gap-3">
+                                <div class="text-red-500 text-xl"><i class="fa-brands fa-youtube"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition">Buat Voiceover (VO)</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Kombinasi text-to-speech AI untuk audio profesional.</p>
+                                </div>
+                            </a>
+                            <a href="https://youtube.com/live/yi_mf7TPEfk?feature=share" target="_blank" class="bg-white p-5 rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition group flex items-start gap-3 sm:col-span-2">
+                                <div class="text-red-500 text-xl"><i class="fa-brands fa-youtube"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm group-hover:text-purple-600 transition">Gabungin Video & VO di Capcut</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Proses editing menyatukan visual gambar bergerak dan audio hasil voiceover AI.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- KOLOM KANAN: TOOLS & PROFILE -->
+                <div class="space-y-8">
+                    
+                    <!-- TOOLS UTAMA SECTION -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-800 px-6 py-4">
+                            <h3 class="font-bold text-white flex items-center">
+                                <i class="fa-solid fa-toolbox mr-2 text-blue-400"></i> Tools Premium
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                                <h4 class="font-bold text-gray-800 text-base mb-1">Tools Link Kilat (Gemini AI)</h4>
+                                <p class="text-xs text-gray-600 leading-relaxed mb-4">
+                                    Tools pembuat code landingpage/miniwebsite otomatis dalam waktu <strong>3-5 menit</strong> pakai lynk.id gratisan.
+                                </p>
+                                <a href="https://gemini.google.com/gem/1a6GCuBujqMKybfmSOylWCuMOcCq5lv5w?usp=sharing" target="_blank" class="inline-flex items-center justify-center bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs py-2 px-4 rounded-lg transition w-full shadow-sm">
+                                    Akses Disini <i class="fa-solid fa-arrow-up-right-from-bracket ml-1.5 text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROFILE & SUPPORT SECTION -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center">
+                        <img src="https://s6.imgcdn.dev/Ydcnit.jpg" alt="Agustriian" class="w-20 h-20 rounded-full mx-auto mb-3 shadow-md border-2 border-brand-500 object-cover">
+                        
+                        <h4 class="font-bold text-gray-800">Agustriian</h4>
+                        <p class="text-xs text-gray-500 mb-4">Owner & Mentor Linkkilat</p>
+                        
+                        <div class="flex flex-col space-y-2">
+                            <!-- Link Toko Digital Mas Agus -->
+                            <a href="https://lynk.id/produktifwithai" target="_blank" class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition text-sm">
+                                <i class="fa-solid fa-store text-lg mr-2"></i> Toko Digital Mas Agus
+                            </a>
+                            <a href="https://wa.me/6285755643820" target="_blank" class="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition text-sm">
+                                <i class="fa-brands fa-whatsapp text-lg mr-2"></i> Chat WhatsApp
+                            </a>
+                            <a href="https://instagram.com/agustriian" target="_blank" class="flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:opacity-90 text-white font-medium py-2 px-4 rounded-lg transition text-sm">
+                                <i class="fa-brands fa-instagram text-lg mr-2"></i> Follow Instagram
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- SECTION TAMBAHAN (FULL WIDTH): BONUS PLR & HASIL KARYA                    -->
+            <!-- ========================================================================= -->
+            <div class="mt-16 space-y-12">
+                
+                <!-- BONUS LIST (SISTEM PLR) - Pindah Ke Bawah -->
+                <section class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-green-600 to-green-500 px-6 py-4 text-white">
+                        <h3 class="font-bold flex items-center text-xl">
+                            <i class="fa-solid fa-gift mr-2 text-yellow-300"></i> Bonus Produk Digital (Sistem PLR)
+                        </h3>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <div class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg text-sm mb-6 leading-relaxed">
+                            <p class="font-bold mb-1"><i class="fa-solid fa-circle-info mr-1"></i> ATURAN HAK JUAL KEMBALI (PLR):</p>
+                            Produk di bawah ini memiliki sistem PLR. Jika Anda menjual kembali, maka orang yang membeli dari Anda juga berhak untuk menjualnya kembali lagi. <strong class="underline block mt-1"></strong>
+                        </div>
+
+                        <!-- Grid untuk menampung banyak list bonus -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            
+                            <!-- Item 1 -->
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col justify-between hover:shadow-md transition">
+                                <div class="mb-3">
+                                    <h5 class="font-bold text-gray-800 text-sm">Produk Digital Video Faceless</h5>
+                                    <p class="text-xs text-gray-500 mt-1">Harga jual: Min. 25k | Profit 100%</p>
+                                </div>
+                                <a href="https://drive.google.com/drive/folders/1e3HE-96kt_ipXGwqUt7WcKWB7qnMAFeV" target="_blank" class="text-center bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded transition w-full">
+                                    Download Sekarang
+                                </a>
+                            </div>
+
+                            <!-- Item Placeholder (Bisa dihapus / di-copy kalau ada bonus baru) -->
+                            <div class="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex flex-col justify-center items-center opacity-70">
+                                <i class="fa-solid fa-lock text-2xl text-gray-400 mb-2"></i>
+                                <h5 class="font-semibold text-gray-500 text-sm">Bonus Selanjutnya...</h5>
+                                <p class="text-xs text-gray-400">Will be updated soon</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- REFERENSI HASIL KARYA MEMBER (NEW) -->
+                <section>
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-100 p-2 rounded-lg text-blue-600 mr-3"><i class="fa-solid fa-star"></i></div>
+                        <h2 class="text-2xl font-bold text-gray-800">Referensi Hasil Karya Member</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm">Berikut adalah beberapa contoh landing page / toko digital keren buatan member menggunakan trik Kelas Linkkilat Lynk.id.</p>
+
+                    <!-- Grid Layout 2-4 Kolom Responsif -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <a href="https://lynk.id/produktifwithai" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">produktifwithai</span>
+                        </a>
+                        <a href="https://lynk.id/kakeno" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">kakeno</span>
+                        </a>
+                        <a href="https://lynk.id/gbsbritishpropolis" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">gbsbritishpropolis</span>
+                        </a>
+                        <a href="https://lynk.id/bisacraft" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">bisacraft</span>
+                        </a>
+                        <a href="https://lynk.id/lydisnlycies" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">lydisnlycies</span>
+                        </a>
+                        <a href="https://lynk.id/ibulilih" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">ibulilih</span>
+                        </a>
+                        <a href="https://lynk.id/rahmatofficial" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">rahmatofficial</span>
+                        </a>
+                        <a href="https://lynk.id/tulis-menulis" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">tulis-menulis</span>
+                        </a>
+                        <a href="https://lynk.id/alhasandesig" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">alhasandesig</span>
+                        </a>
+                        <a href="https://kiblatbio.link/uhuyy" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">kiblatbio.link/uhuyy</span>
+                        </a>
+                        <a href="https://kiblatbio.link/PRODIGI_Boutique_Store" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">PRODIGI Boutique</span>
+                        </a>
+                        <a href="https://lynk.id/rahmatofficial/xk8314g1e44w" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">rahmatofficial (Page)</span>
+                        </a>
+                        <a href="https://lynk.id/digimomadv/page/zona-anak" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">digimomadv</span>
+                        </a>
+                        <a href="https://lynk.id/ashshofaolshop" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">ashshofaolshop</span>
+                        </a>
+                        <a href="https://lynk.id/berkah_properti" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">berkah_properti</span>
+                        </a>
+                        <a href="https://lynk.id/dodikomarudin" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">dodikomarudin</span>
+                        </a>
+                        <a href="https://lynk.id/kakeno/k6lwwo5gox77" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">kakeno (Page)</span>
+                        </a>
+                        <a href="https://lynk.id/rumahnaufal" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">rumahnaufal</span>
+                        </a>
+                        <a href="https://lynk.id/grahamahirarsyani1" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">grahamahirarsyani1</span>
+                        </a>
+                        <a href="https://lynk.id/arroyyanfurniture" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">arroyyanfurniture</span>
+                        </a>
+                        <a href="https://lynk.id/catatanbaitullah" target="_blank" class="bg-white border border-gray-200 p-3 rounded-lg hover:bg-brand-50 hover:border-brand-300 transition flex items-center group shadow-sm text-sm">
+                            <i class="fa-solid fa-link text-gray-400 group-hover:text-brand-500 mr-2 shrink-0"></i> <span class="truncate text-gray-700 font-medium">catatanbaitullah</span>
+                        </a>
+                    </div>
+                </section>
+                
+            </div>
+            <!-- ================= END TAMBAHAN SECTION ================= -->
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+                <p>Simpan baik-baik link halaman ini ya, HANYA untuk MEMBER LINKKILAT ☺️</p>
+                <p class="mt-2">&copy; 2026 Kelas Buat Landingpage Lynk.id by Agustriian.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- LOGIKA LOGIN & UTILITY SECURITY SCRIPT -->
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const errorMsg = document.getElementById('error-msg');
+        
+        // Logika Show/Hide Password Baru
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        togglePasswordBtn.addEventListener('click', function () {
+            // Toggle type input password/text
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Toggle icon mata
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+        
+        // Perubahan Kredensial Akses
+        const validUsername = "member linkkilat";
+        const validPassword = "passwordbeli";
+
+        if (sessionStorage.getItem('isLoggedIn') === 'true') showDashboard();
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (document.getElementById('username').value === validUsername && document.getElementById('password').value === validPassword) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                errorMsg.classList.add('hidden');
+                showDashboard();
+            } else {
+                errorMsg.classList.remove('hidden');
+                loginForm.classList.add('shake');
+                setTimeout(() => loginForm.classList.remove('shake'), 400);
+            }
+        });
+
+        function showDashboard() {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            
+            // Kembalikan input password tertutup jika sempat di "show"
+            passwordInput.setAttribute('type', 'password');
+            eyeIcon.classList.add('fa-eye');
+            eyeIcon.classList.remove('fa-eye-slash');
+
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+        }
+
+        // ==========================================
+        // SCRIPT KEAMANAN (ANTI-INSPECT & PROTEKSI)
+        // ==========================================
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false; // F12
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; // Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; // Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 67) return false; // Ctrl+Shift+C
+            if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U
+        };
+
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    </script>
+</body>
+</html>
